@@ -6,3 +6,5 @@
 - Stack is not part of main memory
 - 16 8-bit registers to store general data
 
+## References:
+- http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#0.0
