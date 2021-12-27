@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include <Windows.h>
 #include <chip8.h>
 
 const char keyboard_map[CHIP8_TOTAL_KEYS] = {
@@ -13,7 +14,8 @@ int main(int argc, char** argv)
 {
 	struct chip8 chip8;
 	chip8_init(&chip8);
-	
+
+	chip8_screen_draw_sprite(&chip8.screen, 62, 10, &chip8.memory.memory[0x05], 5);
 	SDL_Init(SDL_INIT_EVERYTHING);
 	SDL_Window* window = SDL_CreateWindow(
 		EMULATOR_WINDOW_TITLE, 
@@ -64,14 +66,35 @@ int main(int argc, char** argv)
 		SDL_RenderClear(renderer);
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
 
-		SDL_Rect r;
-		r.x = 0;
-		r.y = 0;
-		r.w = 40;
-		r.h = 40;
+		for (int x = 0; x < CHIP8_WIDTH; x++) 
+		{
+			for (int y = 0; y < CHIP8_HEIGHT; y++) 
+			{
+				if (chip8_screen_is_set(&chip8.screen, x, y))
+				{
+					SDL_Rect r;
+					r.x = x * CHIP8_WINDOW_MULTIPLIER;
+					r.y = y * CHIP8_WINDOW_MULTIPLIER;
+					r.w = CHIP8_WINDOW_MULTIPLIER;
+					r.h = CHIP8_WINDOW_MULTIPLIER;
+					SDL_RenderFillRect(renderer, &r);
+				}
+			}
+		}
 
-		SDL_RenderFillRect(renderer, &r);
 		SDL_RenderPresent(renderer);
+
+		if (chip8.registers.DT > 0)
+		{
+			Sleep(100);
+			chip8.registers.DT -= 1;
+		}
+
+		if (chip8.registers.ST > 0)
+		{
+			Beep(15000, 100 * chip8.registers.ST);
+			chip8.registers.ST = 0;
+		}
 	}
 
 out:
