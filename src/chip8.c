@@ -316,7 +316,7 @@ static void chip8_exec_extended(struct chip8* chip8, unsigned short opcode)
         // EXA1 - SKPN Vx - Skip next instruction if key with the value of Vx is not pressed.
         case 0xE000:
         {
-            switch (opcode)
+            switch (opcode & 0x00ff)
             {
                 case 0x9e:
                     if (chip8_keyboard_is_down(&chip8->keyboard, chip8->registers.V[x]))
