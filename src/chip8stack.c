@@ -10,7 +10,7 @@ static void chip8_stack_in_bounds(struct chip8* chip8)
 void chip8_stack_push(struct chip8* chip8, unsigned short val)
 {
     chip8_stack_in_bounds(chip8);
-    chip8->stack.stack[chip8->registers.SP] = val; 
+    chip8->stack.stack[chip8->registers.SP] = val;
     chip8->registers.SP += 1;
 }
 
